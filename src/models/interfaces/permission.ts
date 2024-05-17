@@ -1,6 +1,5 @@
-export default interface Role {
+export default interface Permission {
     id?: number;
     name?: string;
     description: string;
-    active?: number;
 }
