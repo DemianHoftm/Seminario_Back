@@ -1,9 +1,8 @@
-import {Model, DataTypes, TinyIntegerDataType} from 'sequelize'
+import {Model, DataTypes} from 'sequelize'
 import { sequelize } from '../config/db';
 import Role from './interfaces/role';
 import Role_PermissionModel from './role_permission';
 import PermissionModel from './permission';
-import { getOriginalNode } from 'typescript';
 
 
 class RoleModel extends Model<Role> implements Role {
@@ -13,12 +12,12 @@ class RoleModel extends Model<Role> implements Role {
     public active!: number;
 
     static initializeAssociations(){
-     
+        //conecta las tablas de permisos y tole usando de intermediario la tabla de role_permission
         RoleModel.belongsToMany(PermissionModel, {through: Role_PermissionModel, as: 'Role_permission', foreignKey: 'role_id'});
         PermissionModel.belongsToMany(RoleModel, {through: Role_PermissionModel, as: 'Role_permission', foreignKey: 'permission_id'});
 
     }
-
+//obtiene todos los roles con el id
     static async GetPermissionsFromRol(id_re: number){
         try{
             const permisos = await  RoleModel.findAll({
@@ -61,12 +60,12 @@ class RoleModel extends Model<Role> implements Role {
                 const rol = RoleModel.create({
                     name: name,
                     description: descr,
-                    active: 1
-                }, {transaction: t});
+                    active: 1}, {transaction: t});
 
                 for (const number of pers) {
                     await Role_PermissionModel.create({ role_id: (await rol).id,permission_id: number }, {transaction: t});
                 }
+                
                 
 
 
@@ -79,6 +78,32 @@ class RoleModel extends Model<Role> implements Role {
         }
 
 
+    }
+    static async ModifyRole(id_: number, name: string, description: string, pers: number[]){
+        try{
+            const result = await sequelize.transaction(async t => {
+                const opt_up = {
+                    where: {id: id_},
+                    return: true,
+                    transaction: t
+                }
+                const _rol = await RoleModel.update({ name: name, description: description }, opt_up);
+    
+                const opt_d = {
+                    where: {role_id: id_},
+                    return: true,
+                    transaction: t
+                };
+                await Role_PermissionModel.destroy(opt_d);
+                const createPromises = pers.map(number => 
+                    Role_PermissionModel.create({ role_id: id_, permission_id: number }, {transaction: t}));
+                await Promise.all(createPromises);
+            });
+            return result;
+        }catch(error: any){
+            console.log(error);
+            return null;
+        }
     }
     
 }
