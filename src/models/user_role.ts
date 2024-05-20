@@ -27,7 +27,7 @@ User_Role_Model.init(
 
     {
         sequelize,
-        tableName: "user_id",
+        tableName: "user_role",
         modelName: "User_Role_Model",
         timestamps: false,
     }

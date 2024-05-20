@@ -14,8 +14,8 @@ export interface User {
     forename?: string;
     surname?: string;
     email?: string;
-    brithdate?: Date;
-    blood_type?: blood_type;
+    birthdate?: Date;
+    blood_type?: string;
     medical_record?: string;
     status_id?: number;
     parish_id?: number;
