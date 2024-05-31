@@ -1,5 +1,9 @@
 import { Sequelize } from "sequelize";
 
+
+
+
+
 const Connect = process.env['MYSQL_NAME'] || 'seminario';
 const username = process.env['MYSQL_USER'] || 'root';
 const password  = process.env['MYSQL_PASSWORD'] || "admin";

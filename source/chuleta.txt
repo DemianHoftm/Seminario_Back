@@ -1,0 +1,17 @@
+llamado abstranto en dominio repository 
+
+
+se realiza los query infraestructura datasource
+se abstrataliza en el repository
+
+en el caso de uso se llama la funcion del repositorio enviandole un objeto
+en imprementacion van las query
+
+en presentation van los controladores y las rutas
+
+1: crear la entity
+2:crear los data source de domain donde se llama a las clases de creacion de forma abstracta
+
+3: crear los repositories de domain, copiar y pegar el datasource y cambiar el nombre a repository
+
+4: crea el archivo implementacion del data source, alli se realizara las llamadas a la base de datos
